@@ -5,11 +5,25 @@
 #include <unistd.h>     // Unix 标准函数（如 read/write）
 #include <termios.h>    // 串口配置（波特率等）
 #include <errno.h>      // 错误号定义
+#include <sys/select.h>
 
 static int fd;
 #ifndef CRTSCTS
 #define CRTSCTS 020000000000  /* Flow control.  八进制值，等同于 0x80000000*/
 #endif
+
+/**
+ * @Description: 毫秒延时函数
+ * @param {int} ms: 毫秒
+ * @return {*} 
+ */
+void delay_ms(int ms){ /* 毫秒级 延时 */
+    struct timeval delay;
+    delay.tv_sec = ms / 1000;
+    delay.tv_usec = (ms % 1000) * 1000; // ms
+    select(0, NULL, NULL, NULL, &delay);
+}
+
 /**
  * @Description: 打开串口并返回文件描述符
  * @param {char} *device: 串口设备
@@ -21,6 +35,9 @@ int open_serial_port(const char *device) {
         perror("无法打开串口设备");
         return -1;
     }
+    
+    // 清空输入和输出缓冲区
+    tcflush(fd, TCIOFLUSH); 
 
     // 恢复串口阻塞模式（等待数据）
     fcntl(fd, F_SETFL, 0);
@@ -93,6 +110,9 @@ int send_and_receive(const unsigned char *tx_data, int tx_len, unsigned char *rx
         printf("%02X ", tx_data[i]);
     }
     printf("\n");
+    
+    // 延迟100ms
+    delay_ms(100); 
 
     // 接收数据
     int received = read(fd, rx_buf, rx_buf_size);
