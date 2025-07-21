@@ -140,7 +140,7 @@ int parse_command_line(int argc, char *argv[]) {
         }
         
         int mode = atoi(argv[2]);
-        if (!check_range(mode, 0, MAX_COLOR_MODE, "mode")) return 1;
+        if (!check_range(mode, 0, MAX_COLOR_MODE, "mode")) return -1;
         
         uint8_t data[] = {mode};
         frame_length = build_frame(CMD_SET_COLOR_MODE, data, sizeof(data));
@@ -154,7 +154,7 @@ int parse_command_line(int argc, char *argv[]) {
         }
         
         int speed = atoi(argv[2]);
-        if (!check_range(speed, 1, MAX_SPEED, "speed")) return 1;
+        if (!check_range(speed, 1, MAX_SPEED, "speed")) return -1;
         
         uint8_t data[] = {speed};
         frame_length = build_frame(CMD_SET_COLOR_SPEED, data, sizeof(data));
@@ -168,7 +168,7 @@ int parse_command_line(int argc, char *argv[]) {
         }
         
         int step = atoi(argv[2]);
-        if (!check_range(step, 1, MAX_STEP, "step")) return 1;
+        if (!check_range(step, 1, MAX_STEP, "step")) return -1;
         
         uint8_t data[] = {step};
         frame_length = build_frame(CMD_SET_COLOR_STEP, data, sizeof(data));
@@ -194,7 +194,7 @@ int parse_command_line(int argc, char *argv[]) {
         uint8_t g = hex_to_byte(argv[4]);
         uint8_t b = hex_to_byte(argv[5]);
         
-        if (!check_range(fan_id, 1, MAX_FAN_ID, "fan_id")) return 1;
+        if (!check_range(fan_id, 1, MAX_FAN_ID, "fan_id")) return -1;
         
         uint8_t data[] = {fan_id, r, g, b};
         frame_length = build_frame(CMD_SET_RGB_COLOR, data, sizeof(data));
@@ -208,7 +208,7 @@ int parse_command_line(int argc, char *argv[]) {
         }
         
         int speed = atoi(argv[2]);
-        if (!check_range(speed, 1, MAX_SPEED, "speed")) return 1;
+        if (!check_range(speed, 1, MAX_SPEED, "speed")) return -1;
         
         uint8_t data[] = {speed};
         frame_length = build_frame(CMD_SET_FAN_SPEED, data, sizeof(data));
